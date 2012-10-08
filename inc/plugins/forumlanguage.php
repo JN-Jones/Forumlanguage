@@ -17,9 +17,9 @@ function forumlanguage_info()
 	return array(
 		"name"			=> "Forum Language",
 		"description"	=> "Make Forums just availabale for some languages",
-		"website"		=> "http://mybbdemo.tk/",
+		"website"		=> "http://jonesboard.tk/",
 		"author"		=> "Jones",
-		"authorsite"	=> "http://mybbdemo.tk/",
+		"authorsite"	=> "http://jonesboard.tk/",
 		"version"		=> "1.0",
 		"guid" 			=> "",
 		"compatibility" => "16*"
