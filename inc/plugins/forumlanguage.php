@@ -29,7 +29,11 @@ function forumlanguage_info()
 function forumlanguage_install()
 {
 	global $db;
-	$db->query("CREATE TABLE `".TABLE_PREFIX."forumlanguage` ( `language` varchar(100), `fid` varchar(20)) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1");
+	$col = $db->build_create_table_collation();
+	$db->query("CREATE TABLE `".TABLE_PREFIX."forumlanguage` (
+				`language` varchar(100),
+				`fid` varchar(20))
+	ENGINE=MyISAM {$col}");
 	$settinggroup = array(
         "name" => "Forum Language",
         "title" => "Forum Language",
