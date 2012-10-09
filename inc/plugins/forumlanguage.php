@@ -51,7 +51,7 @@ function forumlanguage_install()
         "optionscode" => "text",
         "value" => "0",
         "disporder" => "1",
-        "gid" => intval($gid),
+        "gid" => (int)$gid,
         );
     $db->insert_query("settings", $setting);
 	rebuild_settings();
@@ -172,7 +172,7 @@ function lang_user_in_group($user, $allowedgroups)
 	$groups = array();
 	$agroups = explode(',', $user['additionalgroups']);
 	array_push($groups, $user['usergroup']);
-	for($i=0; $i<sizeof($agroups); $i++) {
+	for($i=0; $i<sizeof($agroups); ++$i) {
 		array_push($groups, $agroups[$i]);
 	}
 	$in = false;
