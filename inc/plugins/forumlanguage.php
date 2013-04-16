@@ -4,25 +4,34 @@ if(!defined("IN_MYBB"))
 {
 	die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
+if(!$pluginlist)
+    $pluginlist = $cache->read("plugins");
 
 $plugins->add_hook("global_start", "forumlanguage_forum");
 $plugins->add_hook("usercp_options_end", "forumlanguage_ucp");
 $plugins->add_hook("datahandler_user_update", "forumlanguage_ucp_handler");
-$plugins->add_hook("admin_config_menu", "forumlanguage_admin_config_menu");
-$plugins->add_hook("admin_config_action_handler", "forumlanguage_admin_config_action_handler");
-$plugins->add_hook("admin_config_permissions", "forumlanguage_admin_config_permissions");
+
+if(is_array($pluginlist['active']) && in_array("myplugins", $pluginlist['active'])) {
+	$plugins->add_hook("myplugins_actions", "forumlanguage_myplugins_actions");
+	$plugins->add_hook("myplugins_permission", "forumlanguage_admin_config_permissions");
+} else {
+	$plugins->add_hook("admin_config_menu", "forumlanguage_admin_config_menu");
+	$plugins->add_hook("admin_config_action_handler", "forumlanguage_admin_config_action_handler");
+	$plugins->add_hook("admin_config_permissions", "forumlanguage_admin_config_permissions");
+}
 
 function forumlanguage_info()
 {
 	return array(
 		"name"			=> "Forum Language",
 		"description"	=> "Make Forums just availabale for some languages",
-		"website"		=> "http://jonesboard.tk/",
+		"website"		=> "http://jonesboard.de/",
 		"author"		=> "Jones",
-		"authorsite"	=> "http://jonesboard.tk/",
+		"authorsite"	=> "http://jonesboard.de/",
 		"version"		=> "1.0",
 		"guid" 			=> "",
-		"compatibility" => "16*"
+		"compatibility" => "16*",
+		"myplugins_id"	=> "forum-language"
 	);
 }
 
@@ -140,6 +149,26 @@ function forumlanguage_forum($forum)
 		}
 	}
 	$forum_cache = $new_forum_cache;
+}
+
+function forumlanguage_myplugins_actions($actions)
+{
+	global $page, $lang, $info;
+
+	$actions['forumlanguage'] = array(
+		"active" => "forumlanguage",
+		"file" => "../config/forumlanguage.php"
+	);
+
+	$sub_menu = array();
+	$sub_menu['10'] = array("id" => "forumlanguage", "title" => "Foren Sprache", "link" => "index.php?module=myplugins-forumlanguage");
+
+	$sidebar = new SidebarItem("Foren Sprache");
+	$sidebar->add_menu_items($sub_menu, $actions[$info]['active']);
+
+	$page->sidebar .= $sidebar->get_markup();
+
+	return $actions;
 }
 
 function forumlanguage_admin_config_menu($sub_menu)

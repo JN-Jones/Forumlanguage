@@ -5,7 +5,12 @@ if(!defined("IN_MYBB"))
 	exit;
 }
 
-$page->add_breadcrumb_item("Foren Sprache", "index.php?module=config-forumlanguage");
+if(function_exists("myplugins_info"))
+    define(MODULE, "myplugins-forumlanguage");
+else
+    define(MODULE, "config-forumlanguage");
+
+$page->add_breadcrumb_item("Foren Sprache", "index.php?module=".MODULE);
  
 $languages = $lang->get_languages();
  
@@ -23,12 +28,12 @@ if($mybb->input['action']=="save") {
 			$db->update_query("forumlanguage", $insert, "language='$key'");
 	} 		
 	flash_message("Gespeichert", 'success');
-	admin_redirect("index.php?module=config-forumlanguage");
+	admin_redirect("index.php?module=".MODULE);
 }
  
 $page->output_header("Foren Sprache");
 
-$form = new Form("index.php?module=config-forumlanguage&amp;action=save", "post");
+$form = new Form("index.php?module=".MODULE."&amp;action=save", "post");
 
 $table = new Table;
 
