@@ -1,11 +1,10 @@
 <?php
-//echo preg_quote('{$lang->show_redirect}</label></span></td></tr>');
 if(!defined("IN_MYBB"))
 {
 	die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
 if(!$pluginlist)
-    $pluginlist = $cache->read("plugins");
+	$pluginlist = $cache->read("plugins");
 
 $plugins->add_hook("global_start", "forumlanguage_forum");
 $plugins->add_hook("usercp_options_end", "forumlanguage_ucp");
@@ -28,9 +27,9 @@ function forumlanguage_info()
 		"website"		=> "http://jonesboard.de/",
 		"author"		=> "Jones",
 		"authorsite"	=> "http://jonesboard.de/",
-		"version"		=> "1.0",
+		"version"		=> "1.0.1",
 		"guid" 			=> "",
-		"compatibility" => "16*",
+		"compatibility" => "1*",
 		"myplugins_id"	=> "forum-language"
 	);
 }
@@ -44,25 +43,25 @@ function forumlanguage_install()
 				`fid` varchar(20))
 	ENGINE=MyISAM {$col}");
 	$settinggroup = array(
-        "name" => "Forum Language",
-        "title" => "Forum Language",
-        "description" => "Settings for the \"Forum Language\" Plugin.",
-        "disporder" => "1",
-        "isdefault" => "0",
-        );
-    $db->insert_query("settinggroups", $settinggroup);
-    $gid = $db->insert_id();
+		"name" => "Forum Language",
+		"title" => "Forum Language",
+		"description" => "Settings for the \"Forum Language\" Plugin.",
+		"disporder" => "1",
+		"isdefault" => "0",
+	);
+	$db->insert_query("settinggroups", $settinggroup);
+	$gid = $db->insert_id();
 
-    $setting = array(
-        "name" => "forumlanguage_ucp",
-        "title" => "Welche Gruppen können Spracheinstellungen überbrücken",
-        "description" => "",
-        "optionscode" => "text",
-        "value" => "0",
-        "disporder" => "1",
-        "gid" => (int)$gid,
-        );
-    $db->insert_query("settings", $setting);
+	$setting = array(
+		"name" => "forumlanguage_ucp",
+		"title" => "Welche Gruppen können Spracheinstellungen überbrücken",
+		"description" => "",
+		"optionscode" => "text",
+		"value" => "0",
+		"disporder" => "1",
+		"gid" => (int)$gid,
+	);
+	$db->insert_query("settings", $setting);
 	rebuild_settings();
 
 	$template="
@@ -86,11 +85,11 @@ function forumlanguage_uninstall()
 	global $db;
 	$db->drop_table("forumlanguage");
 	$query = $db->simple_select("settinggroups", "gid", "name='Forum Language'");
-    $g = $db->fetch_array($query);
+	$g = $db->fetch_array($query);
 	$db->delete_query("settinggroups", "gid='".$g['gid']."'");
 	$db->delete_query("settings", "gid='".$g['gid']."'");
 	rebuild_settings();
-    $db->delete_query("templates", "title='usercp_options_forumlanguage'");
+	$db->delete_query("templates", "title='usercp_options_forumlanguage'");
 	$db->drop_column('users', 'showotherforums');
 }
 
@@ -111,7 +110,7 @@ function forumlanguage_ucp()
 	global $mybb, $forumlang, $templates, $user;
 	$allowed = explode(",", $mybb->settings['forumlanguage_ucp']);
 	if(!lang_user_in_group($mybb->user, $allowed))
-	    return;
+		return;
 
 	if($user['showotherforums'] == 1)
 	{
@@ -136,10 +135,10 @@ function forumlanguage_forum($forum)
 	global $db, $mybb, $forum_cache, $cache, $unviewableforums, $lang;
 	$allowed = explode(",", $mybb->settings['forumlanguage_ucp']);
 	if(lang_user_in_group($mybb->user, $allowed) && $mybb->user['showotherforums']=="1")
-	    return;
+		return;
 	$language=$lang->language ;
 	$getLang=$db->simple_select("forumlanguage", "*", "language='$language'");
-   	if($db->num_rows($getLang)==0)
+	if($db->num_rows($getLang)==0)
 		return;
 	$allowed=explode(",", $db->fetch_field($getLang, "fid"));
 	$current_forum_cache = $cache->read('forums');
@@ -207,7 +206,7 @@ function lang_user_in_group($user, $allowedgroups)
 	$in = false;
 	foreach ($groups as $group) {
 		if(in_array($group, $allowedgroups)) {
-		   $in = true;
+			$in = true;
 		}
 	}
 	return $in;
@@ -217,10 +216,10 @@ function lang_createTemplate($name, $template)
 {
 	global $db;
 	$templatearray = array(
-	        "title" => $name,
-	        "template" => $template,
-	        "sid" => "-2",
-	        );
-    $db->insert_query("templates", $templatearray);
+		"title" => $name,
+		"template" => $template,
+		"sid" => "-2",
+		);
+	$db->insert_query("templates", $templatearray);
 }
 ?>
